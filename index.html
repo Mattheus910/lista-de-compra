@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de compra</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+</head>
+<body>
+    <section id="list-container">
+
+        <header>
+            <h1>Lista de compra</h1>
+        </header>
+
+        <form id="list-form">
+            <input type="text" name="item" id="item" placeholder="Adicione um item">
+            <input type="number" name="quantidade" id="quantidade" placeholder="Quantidade">
+            <input type="number" name="valor" id="valor" placeholder="Valor">
+            <button><i class="bi bi-bag"></i></button>
+        </form>
+
+        <form id="edit-form">
+            <input type="text" name="edit-item" id="edit-item" placeholder="Edite um item">
+            <input type="number" name="edit-quantidade" id="edit-quantidade" placeholder="  Quantidade">
+            <input type="number" name="edit-valor" id="edit-valor" placeholder="Valor">
+            <button class="edit-btn">Editar</button>
+            <button class="cancel-edit-btn">Cancelar</button>
+        </form>
+        
+        <section id="toolbar">
+            <section id="pesquisa">
+                <h4>Pesquisar:</h4>
+                <form>
+                    <input type="text" name="pesquisar" id="pesquisar" placeholder="Buscar">
+                    <button><i class="bi bi-eraser"></i></button>
+                </form>
+            </section>
+            <section id="filter">
+                <h4>Filtrar:</h4>
+                <select id="filtro">
+                    <option value="todos">Todos</option>
+                    <option value="pegos">Pegos</option>
+                    <option value="Falta">Falta</option>
+                </select>
+            </section>
+        </section>
+
+        <section id="lista">
+            <section class="itens done">
+                <h4>Banana</h4>
+                <p class="quantidade-item">1</p>
+                <p class="valor-item">R$ 5,00</p>
+                <p>R$ 5,00</p>
+                <button class="pego"><i class="bi bi-check"></i></button>
+                <button class="editar"><i class="bi bi-pencil"></i></button>
+                <button class="excluir"><i class="bi bi-x-lg"></i></button>
+            </section>
+            <section class="itens">
+                <h4>Arroz</h4>
+                <p class="quantidade-item">2</p>
+                <p class="valor-item">10,00</p>
+                <p>20,00</p>
+                <button class="pego"><i class="bi bi-check"></i></button>
+                <button class="editar"><i class="bi bi-pencil"></i></button>
+                <button class="excluir"><i class="bi bi-x-lg"></i></button>
+            </section>
+            <section class="itens">
+                <h4>Feijão</h4>
+                <p class="quantidade-item">3</p>
+                <p class="valor-item">5,00</p>
+                <p>15,00</p>
+                <button class="pego"><i class="bi bi-check"></i></button>
+                <button class="editar"><i class="bi bi-pencil"></i></button>
+                <button class="excluir"><i class="bi bi-x-lg"></i></button>
+            </section>
+        </section>
+
+
+    </section>
+</body>
+</html>

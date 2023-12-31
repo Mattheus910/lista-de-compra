@@ -1,0 +1,133 @@
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+    font-family: Helvetica, sans-serif;
+}
+
+body {
+    background: url(https://img.freepik.com/fotos-premium/mercado-de-compras-em-desfocar-o-fundo_51764-11.jpg?w=900) center no-repeat;
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+
+}
+
+#list-container {
+    background-color: #fdfdfd;
+    max-width: 450px;
+    min-height: 400px;
+    margin: 50px auto;
+    border-radius: 5px;
+    padding-bottom: 3rem;
+}
+
+header{
+    padding: 40px;
+    text-align: center;
+}
+
+input{
+    padding: 4px 8px;
+    margin-bottom: 10px;
+    border: 1px solid #333;
+}
+
+button, select {
+    cursor: pointer;
+    border: 1px solid #333;
+}
+
+#list-form, #edit-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 70%;
+    justify-content: space-evenly;
+    margin: auto;
+    flex-wrap: wrap;
+}
+
+#list-form #item, #edit-form #edit-item {
+    width: 100%;
+}
+
+
+#list-form input, #edit-form input {
+    width: 48%;
+    height: 30px;
+    border-radius: 5px;
+}
+
+#list-form button, #edit-form button{
+    width: 110px;
+    height: 30px;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+#edit-form {
+    display: none;
+}
+
+#toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 26px;
+    width: 70%;
+    margin: 20px auto;
+}
+
+#toolbar h4 {
+    margin: 5px;
+}
+
+#pesquisar {
+    width: 150px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+select {
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+#toolbar button, .itens button{
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.itens{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #ddd;
+    padding: 1rem;
+}
+
+.itens p, .itens h4{
+    width:20%;
+    height: 10%;
+}
+
+.done {
+    font-style: italic;
+    background-color: #84ff84;
+}
+
+
+button i {
+
+    pointer-events: none;
+}
+
+
+
+
+
