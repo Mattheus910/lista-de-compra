@@ -12,6 +12,8 @@ const list = document.querySelector("#lista");
 const editItemInput = document.querySelector("#edit-item");
 const editQuantidadeInput = document.querySelector("#edit-quantidade");
 const editValorInput = document.querySelector("#edit-valor");
+const filterBtn = document.querySelector("#filter");
+const searchInput = document.querySelector("#search");
 
 let nomeAntigo;
 let quantidadeAntiga;
@@ -19,98 +21,140 @@ let valorAntigo;
 
 // Funções
 
-const adicionarItem = () => {
-
-    if (itemInput.value !== "") {
-
+const adicionarItem = (done = 0, save = 1, nomeItemTexto, quantidadeItemTexto, valorItemTexto, valorTotalItemTexto) => {
+    if (nomeItemTexto !== "") {
         const itens = document.createElement("section");
         itens.classList.add("itens");
-    
+
         const nomeItem = document.createElement("h4");
-        nomeItem.innerText = itemInput.value;
+        nomeItem.innerText = nomeItemTexto;
         itens.appendChild(nomeItem);
-    
+
         const quantidadeItem = document.createElement("p");
         quantidadeItem.classList.add("quantidade-item");
-        quantidadeItem.innerText = quantidadeInput.value;
+        quantidadeItem.innerText = quantidadeItemTexto;
         itens.appendChild(quantidadeItem);
-    
+
         const valorItem = document.createElement("p");
         valorItem.classList.add("valor-item");
-        valorItem.innerText = `R$${Number(valorInput.value).toFixed(2).replace('.', ',')}`;
+        valorItem.innerText = `R$${Number(valorItemTexto).toFixed(2).replace('.', ',')}`;
         itens.appendChild(valorItem);
-    
+
         const valorTotalItem = document.createElement("p");
-        valorTotalItem.classList.add("valor-total")
-        valorTotalItem.innerText = `R$${(Number(valorInput.value) * Number(quantidadeInput.value)).toFixed(2).replace('.', ',')}`;
+        valorTotalItem.classList.add("valor-total");
+        valorTotalItem.innerText = `R$${(Number(valorItemTexto) * Number(quantidadeItemTexto)).toFixed(2).replace('.', ',')}`;
         itens.appendChild(valorTotalItem);
-    
+
         const pegoBtn = document.createElement("button");
-        pegoBtn.classList.add("pego")
+        pegoBtn.classList.add("pego");
         pegoBtn.innerHTML = '<i class="bi, bi-check"></i>';
         itens.appendChild(pegoBtn);
-    
+
         const editBtn = document.createElement("button");
-        editBtn.classList.add("editar")
+        editBtn.classList.add("editar");
         editBtn.innerHTML = '<i class="bi bi-pencil"></i>';
         itens.appendChild(editBtn);
-    
+
         const removeBtn = document.createElement("button");
-        removeBtn.classList.add("excluir")
+        removeBtn.classList.add("excluir");
         removeBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
         itens.appendChild(removeBtn);
-    
+
+        if (done) {
+            itens.classList.add("done");
+        }
+
+        if (save) {
+            saveItensLocalStorage({ nomeItemTexto, quantidadeItemTexto, valorItemTexto, valorTotalItemTexto, done });
+        }
+
         list.appendChild(itens);
 
-        if (quantidadeInput.value === "") {
+        if (quantidadeItemTexto === "") {
             quantidadeItem.innerText = 0;
-        } else if(valorInput.value === ""){
+        } else if (valorItemTexto === "") {
             valorItem.innerText = "R$0";
             valorTotalItem.innerText = "R$0";
         }
-
-        itemInput.value = "";
-        quantidadeInput.value = "";
-        valorInput.value = "";
     }
+};
 
-
+const adicionarItemFromInput = () => {
+    adicionarItem(0, 1, itemInput.value, quantidadeInput.value, valorInput.value, "");
+    itemInput.value = "";
+    quantidadeInput.value = "";
+    valorInput.value = "";
 };
 
 const updateTodo = (editInputValue, editQuantValue, editValorValue) => {
-
     const itens = document.querySelectorAll(".itens");
 
     itens.forEach((item) => {
-
         let itemTitle = item.querySelector("h4");
         let quantidadeTitle = item.querySelector(".quantidade-item");
         let valorTitle = item.querySelector(".valor-item");
-        let valorTotalTitle = item.querySelector(".valor-total")
-        
-        
+        let valorTotalTitle = item.querySelector(".valor-total");
 
         if (itemTitle.innerText === nomeAntigo) {
-            itemTitle.innerText = editInputValue;
-            quantidadeTitle.innerText = editQuantValue;
-            valorTitle.innerText = `R$${parseFloat(editValorValue).toFixed(2).replace(".", ",")}`;
-            valorTotalTitle.innerText = `R$${(Number(editQuantValue) * Number(editValorValue)).toFixed(2).replace(".", ",")}`;
-        } 
+            const newItem = {
+                nomeItemTexto: editInputValue,
+                quantidadeItemTexto: editQuantValue,
+                valorItemTexto: parseFloat(editValorValue.replace("R$", "").replace(",", ".")),
+                valorTotalItemTexto: parseFloat(editQuantValue) * parseFloat(editValorValue.replace("R$", "").replace(",", "."))
+            };
 
+            itemTitle.innerText = newItem.nomeItemTexto;
+            quantidadeTitle.innerText = newItem.quantidadeItemTexto;
+            valorTitle.innerText = `R$${newItem.valorItemTexto.toFixed(2).replace(".", ",")}`;
+            valorTotalTitle.innerText = `R$${newItem.valorTotalItemTexto.toFixed(2).replace(".", ",")}`;
+
+            updateListLocalStorage(nomeAntigo, newItem);
+        }
     });
 };
+const filterList = (filterValue) => {
+    const items = document.querySelectorAll(".itens");
 
+    switch (filterValue) {
+        case "all":
+            items.forEach((itens) => itens.style.display = "flex");
+            break;
 
+        case "done":
+            items.forEach((itens) => itens.classList.contains("done") ? (itens.style.display = "flex") : (itens.style.display = "none"));
+            break;
+
+        case "falt":
+            items.forEach((itens) => !itens.classList.contains("done") ? (itens.style.display = "flex") : (itens.style.display = "none"));
+            break;
+
+        default:
+            break;
+    }
+};
+
+const getSearchedTodos = (search) => {
+    const items = document.querySelectorAll(".itens");
+
+    items.forEach((itens) => {
+        const nomeItem = itens.querySelector("h4").innerText.toLowerCase();
+
+        itens.style.display = "flex";
+
+        if (!nomeItem.includes(search)) {
+            itens.style.display = "none";
+        }
+    });
+};
 
 // Eventos
 
 cadastrarBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    adicionarItem();
+    adicionarItemFromInput();
 });
 
 document.addEventListener("click", (e) => {
-
     const targetEl = e.target;
     const parentEl = targetEl.closest("section");
 
@@ -124,15 +168,19 @@ document.addEventListener("click", (e) => {
         oldValorValue = parentEl.querySelector(".valor-item").innerText;
     }
 
-    if (targetEl.classList.contains("pego")){
+    if (targetEl.classList.contains("pego")) {
         parentEl.classList.toggle("done");
-    };
 
-    if (targetEl.classList.contains("excluir")){
+        updateListStatusLocalStorage(oldValue);
+    }
+
+    if (targetEl.classList.contains("excluir")) {
         parentEl.remove();
-    };
 
-    if (targetEl.classList.contains("editar")){
+        removeItensLocalStorage(oldValue);
+    }
+
+    if (targetEl.classList.contains("editar")) {
         listForm.style.display = "none";
         editForm.style.display = "flex";
         list.style.display = "none";
@@ -144,13 +192,11 @@ document.addEventListener("click", (e) => {
         nomeAntigo = oldValue;
         quantidadeAntiga = oldQuantidadeValue;
         valorAntigo = oldValorValue;
-  
-    };
+    }
 });
 
 cancelBtn.addEventListener("click", (e) => {
     e.preventDefault();
-
     listForm.style.display = "flex";
     editForm.style.display = "none";
     list.style.display = "block";
@@ -158,7 +204,6 @@ cancelBtn.addEventListener("click", (e) => {
 
 editBtn.addEventListener("click", (e) => {
     e.preventDefault();
-
     const editInputValue = editItemInput.value;
     const editQuantValue = editQuantidadeInput.value;
     const editValorValue = editValorInput.value;
@@ -170,17 +215,75 @@ editBtn.addEventListener("click", (e) => {
     listForm.style.display = "flex";
     editForm.style.display = "none";
     list.style.display = "block";
+});
 
-})
+filterBtn.addEventListener("change", (e) => {
+    const filterValue = e.target.value;
+    filterList(filterValue);
+});
+
+searchInput.addEventListener("keyup", (e) => {
+    const search = e.target.value;
+    getSearchedTodos(search);
+});
+
+// save local storage
+
+const getItensLocalStorage = () => {
+    const itens = JSON.parse(localStorage.getItem("itens")) || [];
+    return itens;
+};
+
+const loadItems = () => {
+    const itens = getItensLocalStorage();
+
+    itens.forEach((item) => {
+        adicionarItem(item.done, 0, item.nomeItemTexto, item.quantidadeItemTexto, item.valorItemTexto, item.valorTotalItemTexto);
+    });
+};
+
+const saveItensLocalStorage = (item) => {
+    const itens = getItensLocalStorage();
+    itens.push(item);
+    localStorage.setItem("itens", JSON.stringify(itens));
+};
+
+const removeItensLocalStorage = (oldValue) => {
+
+    const itens = getItensLocalStorage();
+
+    const filteredItens = itens.filter((item) => item.nomeItemTexto !== oldValue);
+
+    localStorage.setItem("itens", JSON.stringify(filteredItens));
+
+};
+
+const updateListStatusLocalStorage = (oldValue) => {
+    const itens = getItensLocalStorage();
+
+    itens.map((item) => item.nomeItemTexto === oldValue ? (item.done = !item.done) : null );
+
+    localStorage.setItem("itens", JSON.stringify(itens));
+
+};
+
+const updateListLocalStorage = (oldValue, newItem) => {
+    const itens = getItensLocalStorage();
+
+    itens.forEach((item) => {
+        if (item.nomeItemTexto === oldValue) {
+            item.nomeItemTexto = newItem.nomeItemTexto;
+            item.quantidadeItemTexto = newItem.quantidadeItemTexto;
+            item.valorItemTexto = newItem.valorItemTexto;
+            item.valorTotalItemTexto = newItem.valorTotalItemTexto;
+        }
+    });
+
+    localStorage.setItem("itens", JSON.stringify(itens));
+};
 
 
 
-
-
-
-
-
-
-
-
-
+document.addEventListener("DOMContentLoaded", () => {
+    loadItems();
+});

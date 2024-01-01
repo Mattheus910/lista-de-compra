@@ -9,9 +9,7 @@
 body {
     background: url(https://img.freepik.com/fotos-premium/mercado-de-compras-em-desfocar-o-fundo_51764-11.jpg?w=900) center no-repeat;
     background-size: cover;
-    width: 100vw;
-    height: 100vh;
-
+    min-height: 100vh;
 }
 
 #list-container {
@@ -114,6 +112,7 @@ select {
 .itens p, .itens h4{
     width:20%;
     height: 10%;
+    word-wrap: break-word;
 }
 
 .done {
@@ -121,10 +120,15 @@ select {
     background-color: #84ff84;
 }
 
-
 button i {
-
     pointer-events: none;
+}
+
+@media screen and (max-width: 480px) {
+    #list-container{
+        width: 90%;
+    }
+    
 }
 
 
