@@ -14,12 +14,62 @@ const editQuantidadeInput = document.querySelector("#edit-quantidade");
 const editValorInput = document.querySelector("#edit-valor");
 const filterBtn = document.querySelector("#filter");
 const searchInput = document.querySelector("#search");
+const precoTotal = document.querySelector(".preco-total p");
 
 let nomeAntigo;
 let quantidadeAntiga;
 let valorAntigo;
 
 // Funções
+
+const numberColors = () => {
+    const itens = document.querySelectorAll(".itens");
+    const atencao = document.querySelector(".atencao");
+    let algumValorVermelho = false;
+
+    itens.forEach((item) => {
+        const quantidade = item.querySelector(".quantidade-item");
+        const valor =  item.querySelector(".valor-item");
+        const valorTotal =  item.querySelector(".valor-total");
+
+        quantidade.innerText = quantidade.innerText === "" ? 0 : quantidade.innerText;
+        quantidade.style.color = quantidade.innerText === "0" ? '#d51e1e' : 'black';
+
+        valor.innerText = valor.innerText === "R$0,00" ? "R$0,00" : valor.innerText;
+        valor.style.color = valor.innerText === "R$0,00" ? '#d51e1e' : 'black';
+
+        valorTotal.innerText = valorTotal.innerText === "R$0,00" ? "R$0,00" : valorTotal.innerText;
+        valorTotal.style.color = valorTotal.innerText === "R$0,00" ? '#d51e1e' : 'black';
+
+        if (quantidade.innerText === "0" || valor.innerText === "R$0,00" || valorTotal.innerText === "R$0,00") {
+            algumValorVermelho = true;
+        }
+    });
+
+
+    if (algumValorVermelho) {
+        atencao.innerText = '*';
+        atencao.style.color = '#d51e1e';
+
+    } else {
+        atencao.innerText = '';
+    }
+
+};
+
+const somaTotal = () => {
+    const itens = document.querySelectorAll(".itens");
+    let total = 0;
+
+    itens.forEach((item) => {
+        const preco = item.querySelector(".valor-total").innerText;
+        const valorFormatado = Number(preco.replace("R$", "").replace(",", "."));
+        total += valorFormatado; 
+    });
+
+    precoTotal.innerText = `R$${total.toFixed(2).replace('.', ',')}`;
+
+};
 
 const adicionarItem = (done = 0, save = 1, nomeItemTexto, quantidadeItemTexto, valorItemTexto, valorTotalItemTexto) => {
     if (nomeItemTexto !== "") {
@@ -70,13 +120,9 @@ const adicionarItem = (done = 0, save = 1, nomeItemTexto, quantidadeItemTexto, v
 
         list.appendChild(itens);
 
-        if (quantidadeItemTexto === "") {
-            quantidadeItem.innerText = 0;
-        } else if (valorItemTexto === "") {
-            valorItem.innerText = "R$0";
-            valorTotalItem.innerText = "R$0";
-        }
+        numberColors();
     }
+
 };
 
 const adicionarItemFromInput = () => {
@@ -112,6 +158,7 @@ const updateTodo = (editInputValue, editQuantValue, editValorValue) => {
         }
     });
 };
+
 const filterList = (filterValue) => {
     const items = document.querySelectorAll(".itens");
 
@@ -152,6 +199,10 @@ const getSearchedTodos = (search) => {
 cadastrarBtn.addEventListener("click", (e) => {
     e.preventDefault();
     adicionarItemFromInput();
+    somaTotal()
+    numberColors()
+
+    itemInput.focus();
 });
 
 document.addEventListener("click", (e) => {
@@ -178,6 +229,8 @@ document.addEventListener("click", (e) => {
         parentEl.remove();
 
         removeItensLocalStorage(oldValue);
+        somaTotal();
+        numberColors();
     }
 
     if (targetEl.classList.contains("editar")) {
@@ -204,9 +257,10 @@ cancelBtn.addEventListener("click", (e) => {
 
 editBtn.addEventListener("click", (e) => {
     e.preventDefault();
+
     const editInputValue = editItemInput.value;
-    const editQuantValue = editQuantidadeInput.value;
-    const editValorValue = editValorInput.value;
+    const editQuantValue = editQuantidadeInput.value || 0;
+    const editValorValue = editValorInput.value || 0;
 
     if (editInputValue) {
         updateTodo(editInputValue, editQuantValue, editValorValue);
@@ -215,6 +269,9 @@ editBtn.addEventListener("click", (e) => {
     listForm.style.display = "flex";
     editForm.style.display = "none";
     list.style.display = "block";
+
+    numberColors();
+    somaTotal();
 });
 
 filterBtn.addEventListener("change", (e) => {
@@ -282,8 +339,7 @@ const updateListLocalStorage = (oldValue, newItem) => {
     localStorage.setItem("itens", JSON.stringify(itens));
 };
 
-
-
 document.addEventListener("DOMContentLoaded", () => {
     loadItems();
+    somaTotal()
 });
