@@ -324,20 +324,30 @@ const updateListStatusLocalStorage = (oldValue) => {
 
 };
 
-const updateListLocalStorage = (oldValue, newItem) => {
+function updateListLocalStorage(oldValue, newItem) {
     const itens = getItensLocalStorage();
-
+    const itemExistente = itens.find((item) => item.nomeItemTexto === oldValue);
+  
+    if (itemExistente) {
+      if (itemExistente.nomeItemTexto === newItem.nomeItemTexto &&
+        itemExistente.quantidadeItemTexto === newItem.quantidadeItemTexto &&
+        itemExistente.valorItemTexto === newItem.valorItemTexto &&
+        itemExistente.valorTotalItemTexto === newItem.valorTotalItemTexto) {
+        return;
+      }
+    }
+  
     itens.forEach((item) => {
-        if (item.nomeItemTexto === oldValue) {
-            item.nomeItemTexto = newItem.nomeItemTexto;
-            item.quantidadeItemTexto = newItem.quantidadeItemTexto;
-            item.valorItemTexto = newItem.valorItemTexto;
-            item.valorTotalItemTexto = newItem.valorTotalItemTexto;
-        }
+      if (item.nomeItemTexto === oldValue) {
+        item.nomeItemTexto = newItem.nomeItemTexto;
+        item.quantidadeItemTexto = newItem.quantidadeItemTexto;
+        item.valorItemTexto = newItem.valorItemTexto;
+        item.valorTotalItemTexto = newItem.valorTotalItemTexto;
+      }
     });
-
+  
     localStorage.setItem("itens", JSON.stringify(itens));
-};
+  }
 
 document.addEventListener("DOMContentLoaded", () => {
     loadItems();
