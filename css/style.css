@@ -152,6 +152,10 @@ button i {
     #list-container{
         width: 95%;
     }
+
+    #list-form input, #edit-form input {
+        width: 47%;
+    }
     
 }
 
